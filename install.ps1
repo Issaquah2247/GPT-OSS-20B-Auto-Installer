@@ -138,6 +138,10 @@ echo.
 echo Server starting on http://localhost:8080
 echo Press Ctrl+C in the server window to stop.
 pause
+"@
+$launcherScript | Out-File -FilePath "$INSTALL_DIR\run.bat" -Encoding ASCII
+Write-Host "Launcher created: $INSTALL_DIR\run.bat" -ForegroundColor Green
+
 # Create CLI launcher script
 $cliLauncherScript = @"
 @echo off
@@ -148,12 +152,6 @@ pause
 "@
 $cliLauncherScript | Out-File -FilePath "$INSTALL_DIR\run-cli.bat" -Encoding ASCII
 Write-Host "CLI launcher created: $INSTALL_DIR\run-cli.bat" -ForegroundColor Green
-"@
-
-$launcherScript | Out-File -FilePath "$INSTALL_DIR\run.bat" -Encoding ASCII
-Write-Host "Launcher created: $INSTALL_DIR\run.bat" -ForegroundColor Green
-
-# Success message
 Write-Host "\n========================================" -ForegroundColor Green
 Write-Host "Installation Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
