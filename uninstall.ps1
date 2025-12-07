@@ -60,4 +60,63 @@ Write-Host "\n========================================" -ForegroundColor Green
 Write-Host "Uninstall Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "\nGPT-OSS 20B HERETIC has been removed from your system." -ForegroundColor White
+Write-Host "
+
+# Optional: Remove installed prerequisites
+Write-Host "\n" -ForegroundColor White
+Write-Host "========================================" -ForegroundColor Yellow
+Write-Host "Optional: Remove Prerequisites" -ForegroundColor Yellow
+Write-Host "========================================" -ForegroundColor Yellow
+Write-Host "\nDo you also want to remove the development tools that were installed?" -ForegroundColor Cyan
+Write-Host "(Git, CMake, Python, Visual Studio Build Tools)" -ForegroundColor Cyan
+Write-Host "\nWARNING: Only remove these if you don't use them for other projects!" -ForegroundColor Red
+Write-Host "\n" -ForegroundColor White
+$removeTools = Read-Host "Remove development tools? Type 'YES' to confirm"
+
+if ($removeTools -eq 'YES') {
+    Write-Host "\n[1/4] Checking and removing Git..." -ForegroundColor Yellow
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        winget uninstall --id Git.Git -e --silent
+        Write-Host "Git uninstalled" -ForegroundColor Green
+    } else {
+        Write-Host "Git not found" -ForegroundColor Gray
+    }
+    
+    Write-Host "\n[2/4] Checking and removing CMake..." -ForegroundColor Yellow
+    if (Get-Command cmake -ErrorAction SilentlyContinue) {
+        winget uninstall --id Kitware.CMake -e --silent
+        Write-Host "CMake uninstalled" -ForegroundColor Green
+    } else {
+        Write-Host "CMake not found" -ForegroundColor Gray
+    }
+    
+    Write-Host "\n[3/4] Checking and removing Python..." -ForegroundColor Yellow
+    if (Get-Command python -ErrorAction SilentlyContinue) {
+        winget uninstall --id Python.Python.3.11 -e --silent
+        Write-Host "Python uninstalled" -ForegroundColor Green
+    } else {
+        Write-Host "Python not found" -ForegroundColor Gray
+    }
+    
+    Write-Host "\n[4/4] Checking and removing Visual Studio Build Tools..." -ForegroundColor Yellow
+    $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath 2>$null
+    if ($vsPath) {
+        Write-Host "Uninstalling Visual Studio Build Tools (this may take a few minutes)..." -ForegroundColor Yellow
+        $vsInstaller = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe"
+        if (Test-Path $vsInstaller) {
+            Start-Process -FilePath $vsInstaller -ArgumentList 'uninstall', '--installPath', "$vsPath", '--quiet', '--norestart' -Wait
+            Write-Host "Visual Studio Build Tools uninstalled" -ForegroundColor Green
+        }
+    } else {
+        Write-Host "Visual Studio Build Tools not found" -ForegroundColor Gray
+    }
+    
+    Write-Host "\nAll development tools removed!" -ForegroundColor Green
+} else {
+    Write-Host "\nDevelopment tools kept." -ForegroundColor Green
+}
+
+Write-Host "\n========================================" -ForegroundColor Green
+Write-Host "Complete Uninstall Finished!" -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
