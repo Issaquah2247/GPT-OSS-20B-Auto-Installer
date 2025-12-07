@@ -131,16 +131,16 @@ $launcherScript = @"
 @echo off
 echo Starting GPT-OSS 20B HERETIC...
 cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
-start llama-server.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
+start llama-server.exe -m "$"`$modelPath"" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
 timeout /t 3 /nobreak
-start "" "$INSTALL_DIR\chat.html"
+start "" "$"`$INSTALL_DIR\chat.html"
 
 # Create CLI launcher script
 $cliLauncherScript = @"
 @echo off
 echo Starting GPT-OSS 20B HERETIC (Command Line Interactive)...
-cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
-llama-cli.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
+cd /d "$"`$INSTALL_DIR\llama.cpp\build\bin\Release"
+llama-cli.exe -m "$"`$modelPath"" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
 pause
 "@
 
