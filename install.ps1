@@ -92,6 +92,18 @@ $launcherScript = @"
 echo Starting GPT-OSS 20B HERETIC...
 cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
 start llama-server.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
+
+# Create CLI launcher script
+$cliLauncherScript = @"
+@echo off
+echo Starting GPT-OSS 20B HERETIC (Command Line Interactive)...
+cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
+llama-cli.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
+pause
+"@
+
+$cliLauncherScript | Out-File -FilePath "$INSTALL_DIR\run-cli.bat" -Encoding ASCII
+Write-Host "CLI launcher created: $INSTALL_DIR\run-cli.bat" -ForegroundColor Green
 echo.
 echo Server starting on http://localhost:8080
 echo Press Ctrl+C in the server window to stop.
@@ -111,4 +123,21 @@ Write-Host "\nThe server will be available at:" -ForegroundColor Cyan
 Write-Host "  http://localhost:8080" -ForegroundColor White
 Write-Host "\nInstallation directory:" -ForegroundColor Cyan
 Write-Host "  $INSTALL_DIR" -ForegroundColor White
-Write-Host ""
+Write-Host "
+
+# Auto-start option
+Write-Host "\nWould you like to start the AI model now? (Y/N): " -NoNewline -ForegroundColor Cyan
+$response = Read-Host
+
+if ($response -eq 'Y' -or $response -eq 'y') {
+    Write-Host "\nStarting AI model..." -ForegroundColor Green
+    Write-Host "Opening interactive chat in command line...\n" -ForegroundColor Cyan
+    
+    Set-Location "$INSTALL_DIR\llama.cpp\build\bin\Release"
+    & .\llama-cli.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
+} else {
+    Write-Host "\nTo start the AI model later, run:" -ForegroundColor Cyan
+    Write-Host "  $INSTALL_DIR\run.bat" -ForegroundColor White
+    Write-Host "\nOr for CLI mode, run:" -ForegroundColor Cyan
+    Write-Host "  $INSTALL_DIR\run-cli.bat" -ForegroundColor White
+}
