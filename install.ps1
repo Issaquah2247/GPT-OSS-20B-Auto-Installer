@@ -23,6 +23,34 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
+
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Host "Python not found. Installing Python..." -ForegroundColor Red
+    winget install --id Python.Python.3.11 -e --source winget --accept-package-agreements --accept-source-agreements
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+
+# Check for Visual Studio Build Tools (required for CMake compilation)
+$vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath 2>$null
+if (!$vsPath) {
+    Write-Host "Visual Studio Build Tools not found. Installing..." -ForegroundColor Red
+    Write-Host "This may take 10-15 minutes. Please wait..." -ForegroundColor Yellow
+    
+    $vsInstallerUrl = "https://aka.ms/vs/17/release/vs_BuildTools.exe"
+    $vsInstaller = "$env:TEMP\vs_buildtools.exe"
+    
+    # Download VS Build Tools installer
+    Write-Host "Downloading Visual Studio Build Tools..." -ForegroundColor Yellow
+    $webClient = New-Object System.Net.WebClient
+    $webClient.DownloadFile($vsInstallerUrl, $vsInstaller)
+    
+    # Install with C++ desktop development workload
+    Write-Host "Installing Visual Studio Build Tools (this will take a while)..." -ForegroundColor Yellow
+    Start-Process -FilePath $vsInstaller -ArgumentList '--quiet', '--wait', '--norestart', '--nocache', '--add', 'Microsoft.VisualStudio.Workload.VCTools', '--includeRecommended' -Wait
+    
+    Remove-Item $vsInstaller -ErrorAction SilentlyContinue
+    Write-Host "Visual Studio Build Tools installed!" -ForegroundColor Green
+}
 if (!(Get-Command cmake -ErrorAction SilentlyContinue)) {
     Write-Host "ERROR: CMake not found. Installing CMake..." -ForegroundColor Red
     winget install --id Kitware.CMake -e --source winget --accept-package-agreements --accept-source-agreements
