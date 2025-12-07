@@ -175,7 +175,7 @@ if ($response -eq 'Y' -or $response -eq 'y') {
     & .\llama-cli.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
 } else {
     Write-Host "\nTo start the AI model later, run:" -ForegroundColor Cyan
-    Write-Host "  $INSTALL_DIR\run.bat" -ForegroundColor White
+    Write-Host "  $INSTALL_DIR\\run.bat" -ForegroundColor White
     Write-Host "\nOr for CLI mode, run:" -ForegroundColor Cyan
-    Write-Host "  $INSTALL_DIR\run-cli.bat" -ForegroundColor White
+    Write-Host "  $INSTALL_DIR\\run-cli.bat" -ForegroundColor White
 }
