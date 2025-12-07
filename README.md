@@ -9,7 +9,7 @@ One-command installer and uninstaller for **GPT-OSS 20B HERETIC uncensored AI mo
 - **Auto-Verification**: Checks all files are downloaded correctly
 - **Auto-Prerequisites**: Installs Git and CMake if missing
 - **Optimized Settings**: Pre-configured with recommended parameters from the model card
-- **Launcher Script**: Easy-to-use batch file to start the AI server
+- **Launcher Script**: Easy-to-use batCLI or web server launchers with optimized settings
 
 ## 📋 Requirements
 
@@ -35,6 +35,15 @@ After installation, double-click:
 C:\Users\YourName\GPT-OSS-20B\run.bat
 ```
 
+**Option 1: Auto-start during installation**
+The installer will ask if you want to start the AI immediately after installation completes. Type `Y` to launch the interactive command-line chat right away.
+
+**Option 2: Server mode (Web UI)**
+After installation, double-click:
+```
+C:\Users\YourName\GPT-OSS-20B\run.bat
+```
+
 Or from PowerShell:
 ```powershell
 & "$env:USERPROFILE\GPT-OSS-20B\run.bat"
@@ -42,7 +51,12 @@ Or from PowerShell:
 
 The server will start at **http://localhost:8080**
 
-### Uninstall (One Command)
+**Option 3: Command-line interactive mode**
+For direct command-line chat:
+```
+C:\Users\YourName\GPT-OSS-20B\run-cli.bat
+
+Uninstall (One Command)
 
 To completely remove everything:
 
