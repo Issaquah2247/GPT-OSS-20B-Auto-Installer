@@ -130,26 +130,24 @@ Write-Host "\n[6/6] Creating launcher..." -ForegroundColor Yellow
 $launcherScript = @"
 @echo off
 echo Starting GPT-OSS 20B HERETIC...
-cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
-start llama-server.exe -m "$"`$modelPath"" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
+cd /d "$$INSTALL_DIR\llama.cpp\build\bin\Release"
+start llama-server.exe -m "$$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
 timeout /t 3 /nobreak
-start "" "$"`$INSTALL_DIR\chat.html"
-
-# Create CLI launcher script
-$cliLauncherScript = @"
-@echo off
-echo Starting GPT-OSS 20B HERETIC (Command Line Interactive)...
-cd /d "$"`$INSTALL_DIR\llama.cpp\build\bin\Release"
-llama-cli.exe -m "$"`$modelPath"" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
-pause
-"@
-
-$cliLauncherScript | Out-File -FilePath "$INSTALL_DIR\run-cli.bat" -Encoding ASCII
-Write-Host "CLI launcher created: $INSTALL_DIR\run-cli.bat" -ForegroundColor Green
+start "" "$$INSTALL_DIR\chat.html"
 echo.
 echo Server starting on http://localhost:8080
 echo Press Ctrl+C in the server window to stop.
 pause
+# Create CLI launcher script
+$cliLauncherScript = @"
+@echo off
+echo Starting GPT-OSS 20B HERETIC (Command Line Interactive)...
+cd /d "$$INSTALL_DIR\llama.cpp\build\bin\Release"
+llama-cli.exe -m "$$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 -i --interactive-first --color --reverse-prompt "User:"
+pause
+"@
+$cliLauncherScript | Out-File -FilePath "$INSTALL_DIR\run-cli.bat" -Encoding ASCII
+Write-Host "CLI launcher created: $INSTALL_DIR\run-cli.bat" -ForegroundColor Green
 "@
 
 $launcherScript | Out-File -FilePath "$INSTALL_DIR\run.bat" -Encoding ASCII
