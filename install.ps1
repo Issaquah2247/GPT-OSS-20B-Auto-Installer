@@ -83,6 +83,18 @@ if (!(Test-Path $modelPath)) {
     exit 1
 }
 
+
+# Download chat interface
+Write-Host "\n[5.5/6] Downloading chat interface..." -ForegroundColor Yellow
+$chatHtmlUrl = "https://raw.githubusercontent.com/Issaquah2247/GPT-OSS-20B-Auto-Installer/main/chat.html"
+$chatHtmlPath = "$INSTALL_DIR\chat.html"
+try {
+    $webClient = New-Object System.Net.WebClient
+    $webClient.DownloadFile($chatHtmlUrl, $chatHtmlPath)
+    Write-Host "Chat interface downloaded successfully!" -ForegroundColor Green
+} catch {
+    Write-Host "WARNING: Could not download chat interface. You can still use the CLI mode." -ForegroundColor Yellow
+}
 Write-Host "All files verified!" -ForegroundColor Green
 
 # Create launcher script
@@ -92,6 +104,8 @@ $launcherScript = @"
 echo Starting GPT-OSS 20B HERETIC...
 cd /d "$INSTALL_DIR\llama.cpp\build\bin\Release"
 start llama-server.exe -m "$modelPath" --n-ctx 8192 --temp 0.8 --repeat-penalty 1.1 --top-k 40 --top-p 0.95 --min-p 0.05 --port 8080
+timeout /t 3 /nobreak
+start "" "$INSTALL_DIR\chat.html"
 
 # Create CLI launcher script
 $cliLauncherScript = @"
